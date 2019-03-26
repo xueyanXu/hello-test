@@ -1,0 +1,320 @@
+/**
+ * @desc: api.js
+ * @author: Mark
+ */
+
+import axios from 'axios'
+import config from '../config/config'
+
+const API = config.api;
+const downloadAPI = config.downloadApi;
+
+
+//全局axios配置
+//axios.defaults.timeout = 10000;
+//axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
+//axios.defaults.headers.common['token'] = localStorage.token;
+
+// UUID
+function generateUUID() {
+  var d = new Date().getTime();
+  var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = (d + Math.random()*16)%16 | 0;
+    d = Math.floor(d/16);
+    return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+  });
+  return uuid;
+};
+
+
+
+//添加请求拦截器
+axios.interceptors.request.use(
+  config => {
+
+    config.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+    config.headers['Content-Type'] = 'application/json;charset=UTF-8';
+    config.headers['x-yop-appkey'] = 'NjAwOSMxNTAxMDM5ODE0ODEx';
+    config.headers['Authorization'] = `Bearer ${localStorage['hbird_user_token']}`;
+    // config.headers['x-yop-request-id'] = generateUUID();
+    return config;
+  }
+);
+
+
+
+function createRequest(url, method, data){
+  method = method || 'get';
+
+  if(method === 'get'){
+    return axios({
+      url,
+      method,
+      params: data
+    })
+  }else {
+    return axios({
+      url,
+      method,
+      data
+    })
+  }
+}
+
+export default {
+
+  userSearch(data){
+    return createRequest(API + '/rest/v2.0/hbird/user-mgr/search', 'post', data);
+  },
+
+
+
+
+
+
+
+
+config.js
+
+  let config = {};
+
+
+if (window.location.hostname == 'it.yeepay.com') {
+    config = {
+        'appKey': 'tdrvipkst7b95',
+        'downloadUrl': 'http://hbirdweb.yeepay.com:30198/file/share/download',
+        'token': localStorage['hbird_rong_token'],
+        'api': 'https://it.yeepay.com/chatapi',
+        'downloadApi': 'https://it.yeepay.com/new-portal'
+    }
+}
+else if (window.location.hostname == '10.151.30.28') {
+    config = {
+        'appKey': 'k51hidwqkey3b',
+        'downloadUrl': 'http://ycetest.yeepay.com:30198/file/share/download',
+        'token': localStorage['hbird_rong_token'],
+        'api': 'http://ycetest.yeepay.com:30178/yop-center',
+        'downloadApi': 'http://10.151.30.28:8087/new-portal'
+    }
+}
+else {
+
+    localStorage['hbird_user_name'] = 'hao.wu-1';
+    localStorage['hbird_avatar'] = 'http://10.151.32.53:30253/hbird-ucm/avatar_00051e41703f030016d7c46d';
+    // localStorage['hbird_user_id'] = '70e92194-0069-495c-916a-6e8096d8582f';
+    localStorage['hbird_user_id'] = '32635c0b-2c0c-45e2-adc9-251a06499e38';
+    localStorage['hbird_rong_token'] = 'kJ7t+M9RFFqMlK3R0rFTwBHwRDWuR12nO5xvLD97GdGAfS+bL3drNRQxq6YW1BDLk4gyS1JTvsmwZzlG+r6FrH7JCXI3M8V+ROZsmwb2bwnPumFNLjekWAaA1f2vLPa/zkbq2paCFgM=';
+    localStorage['hbird_user_token'] = 'eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJ5b3AiLCJqdGkiOiJOakF3T1NNeE5UQXhNRE01T0RFME9ERXg6ZTFhOGQ3ZjYtYjhlYS00MDFlLTgwYjYtZjhmOWExMDgxMWEyIiwic3ViIjoiMzI2MzVjMGItMmMwYy00NWUyLWFkYzktMjUxYTA2NDk5ZTM4IiwiZXhwIjoxNTUzMDIzMjY2LCJzY29wZSI6W10sImFrX2V4cCI6NDMyMDAsInJrX2V4cCI6MjU5MjAwMCwiZXh0Ijp7fSwidHlwZSI6ImFrIiwidmVyIjoiMi4wIn0._yn1r_52muAtdD5crmLmiQKjnYVuRZ9CfYe1CsyvMfX_0urEoCwBslTiZs4tR7BLg3bRoQY123-uZYkRsz8CHw'
+    config = {
+        'appKey': 'k51hidwqkey3b',
+        'downloadUrl': 'https://yos.yeepay.com/yop-center/file/share/download',
+        // 'downloadUrl': 'http://ycetest.yeepay.com:30198/file/share/download',
+        'token': localStorage['hbird_rong_token'],
+        'api': 'http://ycetest.yeepay.com:30178/yop-center',   //'http://10.151.30.88:8064/yop-center'
+        'downloadApi': 'http://10.151.30.28:8087/new-portal'
+    }
+
+
+}
+
+export default config;
+
+
+
+// WEBPACK FOOTER //
+// ./src/config/config.js
+
+
+
+
+
+router
+
+import Vue from 'vue'
+import Router from 'vue-router'
+import Main from '../components/Main'
+
+Vue.use(Router);
+
+export default new Router({
+  routes: [
+    {
+      path: '/',
+      name: 'Main',
+      component: Main
+
+    }
+  ]
+})
+
+
+
+
+
+utlis
+
+
+import Vue from 'vue'
+
+export default {
+
+  // 公司组织架构拼装为Tree组件需要的格式
+  corpHandle(list){
+    list.forEach(data => {
+
+      data.label = data.name;
+      data.children = [];
+
+      if(data.users){
+        data.users.forEach(data => {
+
+          data.label = `${data.realname}`;
+          data.id = data.userId;
+        });
+        data.children.push(...data.users);
+      }
+
+      if(data.subDept){
+        data.children.push(...data.subDept);
+        this.corpHandle(data.subDept);
+      }
+    });
+
+
+    return list;
+  },
+
+
+  disabledMember(list, arr){
+
+    list.forEach(data => {
+
+      if(data.userId && arr.indexOf(data.userId) != -1){
+        Vue.set(data, 'isDisabled', true);
+        console.log(data.isDisabled);
+      }else {
+        Vue.set(data, 'isDisabled', false);
+      }
+
+
+      if(data.children)
+        this.disabledMember(data.children, arr);
+
+    })
+
+  },
+
+  // base64转blob
+  dataURLtoBlob(dataurl){
+    let arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+      bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new Blob([u8arr], { type: mime });
+  },
+
+  readBlobAsDataURL(blob, callback){
+    var a = new FileReader();
+    a.onload = (e) => {
+      console.log(e.target.result);
+      callback(e.target.result);
+    };
+    a.readAsDataURL(blob);
+
+  },
+
+  imageToBase64(file, callback, maxLength){
+
+    let img = new Image();
+    let reader = new FileReader();
+    let maxLen = maxLength ? maxLength : 200;
+    reader.onload = function () {
+      let url = reader.result;
+      img.src = url;
+    };
+
+    img.onload = function(){
+
+      //生成比例
+      let width = img.width, height = img.height;
+      //计算缩放比例
+      let rate = 1;
+      if (width >= height) {
+        if (width > maxLen) {
+          rate = maxLen / width;
+        }
+      } else {
+        if (height > maxLen) {
+          rate = maxLen / height;
+        }
+      }
+
+      img.width = width * rate;
+      img.height = height * rate;
+
+      let canvas = document.createElement("canvas");
+      let ctx = canvas.getContext("2d");
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx.drawImage(img, 0, 0, img.width, img.height);
+      let base64 = canvas.toDataURL('image/png', 0.9);
+      callback(base64, width, height);
+    };
+    reader.readAsDataURL(file);
+
+  },
+
+
+  formatTime(timestamp){
+    let date = new Date(timestamp * 1000),
+    Y = date.getFullYear() + '-',
+    M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-',
+    D = (date.getDate() < 10 ? '0'+date.getDate() : date.getDate()) + ' ',
+    h = (date.getHours() < 10 ? '0'+date.getHours() : date.getHours()) + ':',
+    m = date.getMinutes() < 10 ? '0'+date.getMinutes() : date.getMinutes();
+    return Y + M + D + h + m;
+  },
+
+  paramsSerializer(params, key){
+    return params[key].map(_=>`${key}=${_}`).join('&');
+  },
+
+  // 正则匹配网址
+  regexUrl (str) {
+    let html;
+    let EMailReg = /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/gi;
+    let EMailArr = [];
+
+    html = str.replace(EMailReg, function (str) {
+      EMailArr.push(str);
+      return '[email`' + (EMailArr.length - 1) + ']';
+    });
+
+    let URLReg = /(((ht|f)tp(s?))\:\/\/)?((25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])|(www.|[a-zA-Z].)[a-zA-Z0-9\-\.]+\.(com|cn|edu|gov|mil|net|org|biz|info|name|museum|us|ca|uk|me|im))(\:[0-9]+)*(\/($|[a-zA-Z0-9\.\,\;\?\'\\\+&amp;%\$#\=~_\-]+))*/gi;
+
+    html = html.replace(URLReg, function (str, $1) {
+      if ($1) {
+        return '<a target="_blank" href="' + str + '">' + str + '</a>';
+      }
+      else {
+        return '<a target="_blank" href="//' + str + '">' + str + '</a>';
+      }
+    });
+
+
+    for (let i = 0, len = EMailArr.length; i < len; i++) {
+      html = html.replace('[email`' + i + ']', '<a href="mailto:' + EMailArr[i] + '">' + EMailArr[i] + '<a>');
+    }
+    return html;
+  }
+
+};
+
+
+
+
+
+
+
+
